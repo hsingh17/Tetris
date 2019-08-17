@@ -1,4 +1,6 @@
+#include <algorithm>
 #include "Board.h"
+
 Board::Board() : row(20), col(10), board(row, std::vector<char>(col, '*')) {}
 
 const int Board::Row() const {
@@ -47,6 +49,20 @@ void Board::UpdateBoard(Tetromino& piece) {
     board[coord.first][coord.second] = piece.Piece();
 }
 
+void Board::ClearLines() {
+  for (int i = 0; i < Row(); i++) {
+    if (std::find(board[i].begin(), board[i].end(), '*') == board[i].end())
+      PushDown(i);
+  }
+}
+
+void Board::PushDown(int i) {
+  board[i] = std::vector<char>(Col(), '*');
+  for (int j = i; j > 0; j--)
+    board[j] = board[j - 1];
+  board[0] = std::vector<char>(Col(), '*');
+}
+
 void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   std::map<char, sf::Color> piece_color = {
       {'I', sf::Color::Cyan},
@@ -70,4 +86,6 @@ void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   }
 
 }
+
+
 

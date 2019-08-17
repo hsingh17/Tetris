@@ -12,11 +12,13 @@ class Board : public sf::Drawable{
   void UpdateBoard(Tetromino& piece);
   bool Movable(const std::vector<std::pair<int, int>>& coords, int dx, int dy);
   bool Bottom(Tetromino& piece);
+  void ClearLines();
 
  private:
   int row, col;
   std::vector<std::vector<char>> board;
   char At(int row, int col);
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+  void PushDown(int i);
 };
 #endif //TETRIS__BOARD_H_
