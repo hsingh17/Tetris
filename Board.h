@@ -13,7 +13,8 @@ class Board : public sf::Drawable{
   bool Movable(const std::vector<std::pair<int, int>>& coords, int dx, int dy);
   bool Bottom(Tetromino& piece);
   void ClearLines();
-
+  void HardDrop(Tetromino& piece);
+  bool GameOver(Tetromino& piece);
  private:
   int row, col;
   std::vector<std::vector<char>> board;
