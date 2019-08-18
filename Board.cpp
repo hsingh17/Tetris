@@ -68,6 +68,14 @@ void Board::HardDrop(Tetromino& piece) {
     piece.Move(0, 1);
 }
 
+bool Board::GameOver(Tetromino& piece) {
+  for (const auto& coord : piece.Coords())
+    if (coord.first == 0 && Bottom(piece))
+      return true;
+
+  return false;
+}
+
 void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   std::map<char, sf::Color> piece_color = {
       {'I', sf::Color::Cyan},
@@ -90,14 +98,6 @@ void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
   }
 
-}
-
-bool Board::GameOver(Tetromino& piece) {
-  for (const auto& coord : piece.Coords())
-    if (board[coord.first][coord.second] != '*')
-      return true;
-
-  return false;
 }
 
 

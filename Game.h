@@ -1,7 +1,8 @@
 #ifndef TETRIS__GAME_H_
 #define TETRIS__GAME_H_
-#include <SFML/Graphics.hpp>
 #include <memory>
+#include<random>
+#include <SFML/Graphics.hpp>
 #include "Tetrominoe.h"
 #include "Board.h"
 
@@ -17,8 +18,14 @@ class Game {
   int width, height;
   sf::RenderWindow window;
   std::array<std::unique_ptr<Tetromino>, 7> pieces;
+  sf::Clock gravity_clock;
+  std::random_device rd;
+  std::mt19937 generator;
+  std::uniform_int_distribution<int> dist;
 
-  void GetInput();
-
+  bool GetInput();
+  void Gravity();
+  void CheckBottom();
+  void UpdateWindow();
 };
 #endif //TETRIS__GAME_H_

@@ -15,6 +15,7 @@ class Board : public sf::Drawable{
   void ClearLines();
   void HardDrop(Tetromino& piece);
   bool GameOver(Tetromino& piece);
+
  private:
   int row, col;
   std::vector<std::vector<char>> board;

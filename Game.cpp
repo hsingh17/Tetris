@@ -1,4 +1,3 @@
-#include <random>
 #include <cmath>
 #include <iostream>
 #include "Game.h"
@@ -19,44 +18,40 @@ Game::Game() : width(400), height(800), window(sf::VideoMode(width, height), "Te
   pieces[4] = std::unique_ptr<S>(new S());
   pieces[5] = std::unique_ptr<Z>(new Z());
   pieces[6] = std::unique_ptr<I>(new I());
+
+  dist = std::uniform_int_distribution<int>(0, 6);
 }
 
 void Game::Start() {
-  std::random_device rd;
-  std::mt19937 generator(rd());
-  std::uniform_int_distribution<int> dist(0, 6);
-  sf::Clock clock;
+
   cur_piece = pieces[dist(generator)].get();
 
   while (window.isOpen()) {
-    // Move the block down every 500ms
-    if (clock.getElapsedTime().asMilliseconds() >= 500 && board.Movable(cur_piece->Coords(), 0, 1)) {
-      clock.restart();
-      cur_piece->Move(0, 1);
-    }
+    Gravity();
     GetInput();
     board.ClearLines();
+    CheckBottom();
 
-    bool movingleft = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-    bool movingright = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-    if (board.Bottom(*cur_piece) && !movingleft && !movingright) {
-      board.UpdateBoard(*cur_piece);
-      cur_piece->Reset();
-      cur_piece = pieces[dist(generator)].get();
-    }
+    sf::Event event;
+    if (board.GameOver(*cur_piece))
+      while (window.waitEvent(event))
+        if (event.type == sf::Event::Closed)
+          window.close();
 
-    window.clear();
-    window.draw(*cur_piece);
-    window.draw(board);
-    window.display();
+
   }
 }
 
-void Game::GetInput() {
+bool Game::GetInput() {
   sf::Event event;
   while (window.pollEvent(event)) {
-    if (event.type == sf::Event::Closed || board.GameOver(*cur_piece))
+    if (event.type == sf::Event::Closed)
       window.close();
+
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+      board.HardDrop(*cur_piece);
+      return false;
+    }
 
     if (event.type == sf::Event::KeyPressed) {
       if (event.key.code == sf::Keyboard::Left && board.Movable(cur_piece->Coords(), -1, 0))
@@ -67,9 +62,33 @@ void Game::GetInput() {
         cur_piece->Move(0, 1);
       else if (event.key.code == sf::Keyboard::Up && board.Movable(cur_piece->Rotate(), 0, 0))
         cur_piece->SetCoords(cur_piece->Rotate());
-      else if (event.key.code == sf::Keyboard::Space)
-        board.HardDrop(*cur_piece);
+      return true;
     }
+  }
+  UpdateWindow();
+  return false;
+}
+
+void Game::Gravity() {
+  if (gravity_clock.getElapsedTime().asMilliseconds() >= 500 && board.Movable(cur_piece->Coords(), 0, 1)) {
+    gravity_clock.restart();
+    cur_piece->Move(0, 1);
+  }
+  UpdateWindow();
+}
+
+void Game::CheckBottom() {
+  sf::Clock lock_delay;
+  if (board.Bottom(*cur_piece)) {
+    do {
+      if (GetInput())
+        lock_delay.restart();
+      if (!board.Bottom(*cur_piece))
+        return;
+    } while (lock_delay.getElapsedTime().asMilliseconds() <= 500);
+    board.UpdateBoard(*cur_piece);
+    cur_piece->Reset();
+    cur_piece = pieces[dist(generator)].get();
   }
 }
 
@@ -79,4 +98,10 @@ int Game::Width() {
 
 int Game::Height() {
   return height;
+}
+void Game::UpdateWindow() {
+  window.clear();
+  window.draw(*cur_piece);
+  window.draw(board);
+  window.display();
 }
