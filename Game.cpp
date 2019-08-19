@@ -21,31 +21,22 @@ Game::Game() : width(400), height(800), window(sf::VideoMode(width, height), "Te
 
   generator = std::mt19937(rd());
   dist = std::uniform_int_distribution<int>(0, 6);
+  cur_piece = pieces[dist(generator)].get();
 }
 
 void Game::Start() {
-
-  cur_piece = pieces[dist(generator)].get();
-
-  while (window.isOpen()) {
+  while (window.isOpen() && !board.GameOver(*cur_piece)) {
     Gravity();
     GetInput();
     board.ClearLines();
     CheckBottom();
-
-    sf::Event event;
-    if (board.GameOver(*cur_piece))
-      while (window.waitEvent(event))
-        if (event.type == sf::Event::Closed)
-          window.close();
-
-
   }
+  GameOver();
 }
 
 bool Game::GetInput() {
   sf::Event event;
-  while (window.pollEvent(event)) {
+  while (window.pollEvent(event) && !board.GameOver(*cur_piece)) {
     if (event.type == sf::Event::Closed)
       window.close();
 
@@ -101,7 +92,8 @@ int Game::Height() {
 }
 void Game::UpdateWindow() {
   window.clear();
-  window.draw(*cur_piece);
+  if (!board.GameOver(*cur_piece))
+    window.draw(*cur_piece);
   window.draw(board);
   window.display();
 }
@@ -113,4 +105,13 @@ void Game::PlacePiece() {
   while (new_piece == cur_piece)
     new_piece = pieces[dist(generator)].get();
   cur_piece = new_piece;
+}
+
+void Game::GameOver() {
+  sf::Event event;
+  while (window.waitEvent(event)) {
+    if (event.type == sf::Event::Closed)
+      window.close();
+    UpdateWindow();
+  }
 }

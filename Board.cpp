@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Board.h"
 
-Board::Board() : row(20), col(10), board(row, std::vector<char>(col, '*')) {}
+Board::Board() : row(20), col(10), game_over(false), board(row, std::vector<char>(col, '*')) {}
 
 const int Board::Row() const {
   return row;
@@ -71,9 +71,9 @@ void Board::HardDrop(Tetromino& piece) {
 bool Board::GameOver(Tetromino& piece) {
   for (const auto& coord : piece.Coords())
     if (coord.first == 0 && Bottom(piece))
-      return true;
+      game_over = true;
 
-  return false;
+  return game_over;
 }
 
 void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -91,7 +91,10 @@ void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     for (int j = 0; j < Col(); j++) {
       if (board[i][j] != '*') {
         sf::RectangleShape sq(sf::Vector2f(40.f, 40.f));
-        sq.setFillColor(piece_color[board[i][j]]);
+        if (game_over)
+          sq.setFillColor(sf::Color(128, 128, 128));
+        else
+          sq.setFillColor(piece_color[board[i][j]]);
         sq.setPosition(j * 40, i * 40);
         target.draw(sq, states);
       }

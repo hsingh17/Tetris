@@ -28,6 +28,6 @@ class Game {
   void CheckBottom();
   void UpdateWindow();
   void PlacePiece();
-
+  void GameOver();
 };
 #endif //TETRIS__GAME_H_
