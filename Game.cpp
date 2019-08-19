@@ -19,6 +19,7 @@ Game::Game() : width(400), height(800), window(sf::VideoMode(width, height), "Te
   pieces[5] = std::unique_ptr<Z>(new Z());
   pieces[6] = std::unique_ptr<I>(new I());
 
+  generator = std::mt19937(rd());
   dist = std::uniform_int_distribution<int>(0, 6);
 }
 
@@ -50,6 +51,7 @@ bool Game::GetInput() {
 
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
       board.HardDrop(*cur_piece);
+      PlacePiece();
       return false;
     }
 
@@ -86,9 +88,7 @@ void Game::CheckBottom() {
       if (!board.Bottom(*cur_piece))
         return;
     } while (lock_delay.getElapsedTime().asMilliseconds() <= 500);
-    board.UpdateBoard(*cur_piece);
-    cur_piece->Reset();
-    cur_piece = pieces[dist(generator)].get();
+    PlacePiece();
   }
 }
 
@@ -104,4 +104,13 @@ void Game::UpdateWindow() {
   window.draw(*cur_piece);
   window.draw(board);
   window.display();
+}
+
+void Game::PlacePiece() {
+  board.UpdateBoard(*cur_piece);
+  cur_piece->Reset();
+  auto new_piece = pieces[dist(generator)].get();
+  while (new_piece == cur_piece)
+    new_piece = pieces[dist(generator)].get();
+  cur_piece = new_piece;
 }

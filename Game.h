@@ -27,5 +27,7 @@ class Game {
   void Gravity();
   void CheckBottom();
   void UpdateWindow();
+  void PlacePiece();
+
 };
 #endif //TETRIS__GAME_H_
