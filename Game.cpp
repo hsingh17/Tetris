@@ -29,7 +29,7 @@ Game::Game() : width(400), height(800), window(sf::VideoMode(width, height), "Te
   // Initialize the current piece and ghost piece.
   // NOTE: Ghost piece is the "shadow" of where a block would land
   cur_piece = pieces[dist(generator)].get();
-  ghost_piece = *cur_piece;
+  ghost_piece = Tetromino(*cur_piece, true);
 }
 
 void Game::Start() {
@@ -140,6 +140,7 @@ void Game::PlacePiece() {
   while (new_piece->Piece() == cur_piece->Piece())
     new_piece = pieces[dist(generator)].get();
   cur_piece = new_piece;
+  ghost_piece = Tetromino(*cur_piece, true);
 }
 
 void Game::GameOver() {

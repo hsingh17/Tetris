@@ -6,6 +6,7 @@
 class Tetromino : public sf::Drawable {
  public:
   Tetromino() = default;
+  Tetromino(Tetromino& piece, bool ghost);
   virtual const std::vector<std::pair<int, int>> Rotate();
   void Move(int dx, int dy);
   char& Piece();
@@ -15,6 +16,7 @@ class Tetromino : public sf::Drawable {
 
  protected:
   char piece;
+  bool is_ghost = false;
   std::vector<std::pair<int, int>> cur_coords;
   std::vector<std::pair<int, int>> init_coords;
 

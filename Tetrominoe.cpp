@@ -1,5 +1,13 @@
 #include <map>
 #include "Tetrominoe.h"
+
+Tetromino::Tetromino(Tetromino& piece, bool ghost) {
+  cur_coords = piece.cur_coords;
+  init_coords = piece.init_coords;
+  this->piece = piece.piece;
+  is_ghost = ghost;
+}
+
 const std::vector<std::pair<int, int>> Tetromino::Rotate() {
   // This is  90 degree clockwise rotation
   // We return the rotated coordinates, rather than setting cur_cords to be equal to rotated coords
@@ -43,7 +51,10 @@ std::vector<std::pair<int, int>>& Tetromino::Coords() {
 void Tetromino::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   for (const auto& coord : cur_coords) {
     sf::RectangleShape sq(sf::Vector2f(40.f, 40.f));
-    sq.setFillColor(Config::GetColor(piece));
+    if (is_ghost)
+      sq.setFillColor(Config::GetGhostColor(piece));
+    else
+      sq.setFillColor(Config::GetColor(piece));
     sq.setPosition(coord.second * 40, coord.first * 40);
     target.draw(sq, states);
   }
