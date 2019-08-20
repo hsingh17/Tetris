@@ -1,7 +1,7 @@
 #ifndef TETRIS__TETROMINOE_H_
 #define TETRIS__TETROMINOE_H_
 #include <vector>
-#include <SFML/Graphics.hpp>
+#include "Config.h"
 
 class Tetromino : public sf::Drawable {
  public:
@@ -12,6 +12,7 @@ class Tetromino : public sf::Drawable {
   std::vector<std::pair<int, int>>& Coords();
   void SetCoords(std::vector<std::pair<int,int>> new_coords);
   void Reset();
+
  protected:
   char piece;
   std::vector<std::pair<int, int>> cur_coords;

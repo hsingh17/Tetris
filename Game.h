@@ -14,6 +14,7 @@ class Game {
   int Height();
  private:
   Tetromino* cur_piece;
+  Tetromino ghost_piece;
   Board board;
   int width, height;
   sf::RenderWindow window;
@@ -29,5 +30,6 @@ class Game {
   void UpdateWindow();
   void PlacePiece();
   void GameOver();
+  void AdjustGhostPiece();
 };
 #endif //TETRIS__GAME_H_

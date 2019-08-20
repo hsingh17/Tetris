@@ -1,6 +1,9 @@
 #include <map>
 #include "Tetrominoe.h"
 const std::vector<std::pair<int, int>> Tetromino::Rotate() {
+  // This is  90 degree clockwise rotation
+  // We return the rotated coordinates, rather than setting cur_cords to be equal to rotated coords
+  // because rotated coords could fall outside the board
   std::vector<std::pair<int, int>> rotation_matrix = {
       std::make_pair(0, 1),
       std::make_pair(-1, 0)
@@ -38,19 +41,9 @@ std::vector<std::pair<int, int>>& Tetromino::Coords() {
 }
 
 void Tetromino::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-  std::map<char, sf::Color> piece_color = {
-      {'I', sf::Color::Cyan},
-      {'J', sf::Color::Blue},
-      {'O', sf::Color::Yellow},
-      {'S', sf::Color::Green},
-      {'T', sf::Color::Magenta},
-      {'Z', sf::Color::Red},
-      {'L', sf::Color(255, 140, 0)}
-  };
-
   for (const auto& coord : cur_coords) {
     sf::RectangleShape sq(sf::Vector2f(40.f, 40.f));
-    sq.setFillColor(piece_color[piece]);
+    sq.setFillColor(Config::GetColor(piece));
     sq.setPosition(coord.second * 40, coord.first * 40);
     target.draw(sq, states);
   }
@@ -64,4 +57,5 @@ void Tetromino::Reset() {
   // By setting the piece's coordinates back to its original coords we give illusion of endless pieces
   cur_coords = init_coords;
 }
+
 

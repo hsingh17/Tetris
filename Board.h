@@ -20,6 +20,7 @@ class Board : public sf::Drawable{
   int row, col;
   bool game_over;
   std::vector<std::vector<char>> board;
+
   char At(int row, int col);
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
   void PushDown(int i);
