@@ -32,7 +32,7 @@ Game::Game() : width(400), height(800), window(sf::VideoMode(width, height), "Te
   ghost_piece = Tetromino(*cur_piece, true);
 }
 
-void Game::Start() {
+bool Game::Start() {
   while (window.isOpen() && !board.GameOver(*cur_piece)) {
     // Game loop is as follows:
     // 1. Push block down due to gravity
@@ -49,7 +49,7 @@ void Game::Start() {
     CheckBottom();
     UpdateWindow();
   }
-  GameOver();
+  return GameOver();
 }
 
 bool Game::GetInput() {
@@ -143,13 +143,18 @@ void Game::PlacePiece() {
   ghost_piece = Tetromino(*cur_piece, true);
 }
 
-void Game::GameOver() {
+bool Game::GameOver() {
+  // Returns bool to indicate if user wants to play again
   sf::Event event;
   while (window.waitEvent(event)) {
     if (event.type == sf::Event::Closed)
       window.close();
+    if (event.type == sf::Event::KeyPressed)
+      if (event.key.code == sf::Keyboard::R)
+        return true;
     UpdateWindow();
   }
+  return false;
 }
 
 void Game::AdjustGhostPiece() {

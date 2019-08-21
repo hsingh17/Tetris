@@ -3,6 +3,7 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 
+// Config class for colors
 class Config {
  public:
   static const sf::Color GetColor(char piece);

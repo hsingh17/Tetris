@@ -9,7 +9,7 @@
 class Game {
  public:
   Game();
-  void Start();
+  bool Start();
   int Width();
   int Height();
  private:
@@ -29,7 +29,7 @@ class Game {
   void CheckBottom();
   void UpdateWindow();
   void PlacePiece();
-  void GameOver();
+  bool GameOver();
   void AdjustGhostPiece();
 };
 #endif //TETRIS__GAME_H_
