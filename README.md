@@ -1,6 +1,8 @@
 # Tetris
 Tetris recreation in C++ using the SFML library.
 
+![Tetris](https://i.imgur.com/nzm85zF.gif)
+
 # Motivation
 I really enjoy playing Tetris, and I have always wanted to recreate this classic arcade game for my own. I finally found some time, so I finally decided to sit down and recreate Tetris. Through this project, I expanded my knowledge of C++ libraries by using SFML for the GUI.
 
@@ -12,7 +14,7 @@ I tried my best to recreate a genuine experience of Tetris, here are some of the
 1. `Space` is to hard drop a piece
 2. &#8593; is to rotate a piece 90 degrees clockwise
 3. &#8592; & &#8594; is to move the piece left and right, respectively
-4. 'R' is to restart the game after a game over
+4. `R` is to restart the game after a game over
 5. This recreation has the Tetris mechanic known as [Infinity](https://tetris.fandom.com/wiki/Infinity)
 6. This recreation uses the [Sega Rotation System](https://tetris.fandom.com/wiki/Sega_Rotation)
 
